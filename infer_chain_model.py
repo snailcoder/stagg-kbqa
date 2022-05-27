@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# File              : infer_chain_model.py
-# Author            : Yan <yanwong@126.com>
-# Date              : 07.07.2021
-# Last Modified Date: 28.04.2022
-# Last Modified By  : Yan <yanwong@126.com>
+
 
 import torch
 from torch import nn
@@ -51,29 +47,4 @@ class SiameseCnn(nn.Module):
     logits1 = self.cnn(x1)
     logits2 = self.cnn(x2)
     return logits1, logits2
-
-class ContrastiveLoss(nn.Module):
-  def __init__(self, margin=2.0):
-    super(ContrastiveLoss, self).__init__()
-    
-    self.margin = margin
-
-  def forward(self, x1, x2, y):
-    # N: batch size
-    # D: vector dimension
-
-    # x1.shape == x2.shape == (N, D)
-    # y.shape == (N)
-
-    d = F.pairwise_distance(x1, x2, p=2.0)  # (N)
-
-    # When training, if x1 and x2 are of the same class, y should be 0;
-    # if x1 and x2 are of different class, y should be 1.
-    # loss = (1 - y) * d ^ 2 + y * max(margin - d, 0) ^ 2
-
-    loss = (1 - y) * torch.pow(d, 2) + y * torch.pow(
-        torch.clamp(self.margin - d, min=0.0), 2)
-    loss = torch.mean(loss)
-    return loss
-
 

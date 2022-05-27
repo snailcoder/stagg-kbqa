@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# File              : utils.py
-# Author            : Yan <yanwong@126.com>
-# Date              : 28.04.2022
-# Last Modified Date: 29.04.2022
-# Last Modified By  : Yan <yanwong@126.com>
+
 
 from collections import Counter, OrderedDict
+import os
 
-import numpy as np
-
+import torch
 from torchtext.vocab import Vocab, vocab
+import numpy as np
 
 def build_vocab(dataset, tokenizer):
   counter = Counter()
@@ -44,4 +41,11 @@ def load_pretrained_embedding(filename, emb_dim, words):
   print(f'# out-of-pretrained words: {oop_num}')
 
   return emb
+
+def save_model(model, save_dir, filename):
+  if not os.path.isdir(save_dir):
+    os.makedirs(save_dir)
+  save_path = os.path.join(save_dir, filename)
+  # torch.save(model.state_dict(), save_path)
+  torch.save(model, save_path)
 
